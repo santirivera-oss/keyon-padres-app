@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+android/build/
+android/app/build/
+android/.gradle/
+android/.idea/
+android/local.properties
+android/app/release/
+android/app/debug/
+*.keystore
+*.jks
+!debug.keystore
+
+ios/Pods/
+ios/build/
+ios/DerivedData/
+*.xcworkspace
+ios/.xcode.env.local
+
+# Metro
+.metro-health-check*
+
+# Testing
+coverage/
+
+# Logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Temp
+*.orig
+*.tsbuildinfo
