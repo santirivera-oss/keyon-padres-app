@@ -11,7 +11,7 @@
     "build:ios": "eas build --platform ios"
   },
   "dependencies": {
-    "@expo/vector-icons": "^14.0.0",
+    "@expo/vector-icons": "~14.0.4",
     "@react-native-async-storage/async-storage": "1.23.1",
     "date-fns": "^3.3.0",
     "expo": "~52.0.0",
@@ -38,7 +38,7 @@
     "firebase": "^10.7.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "0.76.5",
+    "react-native": "0.76.9",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",

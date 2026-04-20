@@ -157,9 +157,16 @@ export default function InicioScreen() {
                     <Text style={[styles.timelineTime, { color: colors.primary }]}>
                       {registro.hora.slice(0, 5)}
                     </Text>
-                    <Text style={[styles.timelineMode, { color: colors.textMuted }]}>
-                      vía {getModoLabel(registro.modo)}
-                    </Text>
+                    <View style={styles.timelineMeta}>
+                      <Text style={[styles.timelineMode, { color: colors.textMuted }]}>
+                        vía {getModoLabel(registro.modo)}
+                      </Text>
+                      {registro.origen === 'terminal_pi' && (
+                        <View style={styles.origenBadge}>
+                          <Text style={styles.origenBadgeText}>Terminal</Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 </View>
               ))}
@@ -371,6 +378,25 @@ const styles = StyleSheet.create({
   },
   timelineMode: {
     fontSize: Theme.fontSize.xs,
+  },
+  timelineMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 2,
+  },
+  origenBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(34, 211, 238, 0.5)',
+    backgroundColor: 'rgba(34, 211, 238, 0.12)',
+  },
+  origenBadgeText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#22d3ee',
   },
   quickStats: {
     flexDirection: 'row',

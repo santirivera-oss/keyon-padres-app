@@ -89,9 +89,16 @@ export default function HistorialScreen() {
             <Text style={[styles.registroTipo, { color: colors.textPrimary }]}>
               {registro.tipoRegistro}
             </Text>
-            <Text style={[styles.registroModo, { color: colors.textMuted }]}>
-              {getModoLabel(registro.modo)}
-            </Text>
+            <View style={styles.registroMeta}>
+              <Text style={[styles.registroModo, { color: colors.textMuted }]}>
+                {getModoLabel(registro.modo)}
+              </Text>
+              {registro.origen === 'terminal_pi' && (
+                <View style={styles.origenBadge}>
+                  <Text style={styles.origenBadgeText}>Terminal</Text>
+                </View>
+              )}
+            </View>
           </View>
           <Text style={[styles.registroHora, { color: colors.primary }]}>
             {registro.hora?.slice(0, 5) || '--:--'}
@@ -292,6 +299,25 @@ const styles = StyleSheet.create({
   },
   registroModo: {
     fontSize: 12,
+  },
+  registroMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 2,
+  },
+  origenBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(34, 211, 238, 0.5)',
+    backgroundColor: 'rgba(34, 211, 238, 0.12)',
+  },
+  origenBadgeText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#22d3ee',
   },
   registroHora: {
     fontSize: 18,

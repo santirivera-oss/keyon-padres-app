@@ -28,6 +28,7 @@ export interface RegistroAcceso {
   modo: 'facial' | 'qr' | 'barcode' | 'manual';
   timestamp: string;
   ubicacion?: string;
+  origen?: 'kiosco' | 'terminal_pi';
 }
 
 // ============ ESTADO DEL ALUMNO ============
