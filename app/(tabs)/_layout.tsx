@@ -162,6 +162,12 @@ export default function TabsLayout() {
             href: null, // Acceder desde Inicio o desde notificación de reporte/pase
           }}
         />
+        <Tabs.Screen
+          name="maestros"
+          options={{
+            href: null, // Acceder desde Perfil
+          }}
+        />
       </Tabs>
 
       {/* Tutorial Overlay - persiste entre tabs */}

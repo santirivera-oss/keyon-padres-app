@@ -665,7 +665,7 @@ export default function PerfilScreen() {
             </TouchableOpacity>
 
             {/* Avisos de la Escuela */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.menuItem, { borderBottomColor: colors.border }]}
               onPress={() => {
                 triggerHaptic();
@@ -678,6 +678,24 @@ export default function PerfilScreen() {
               <View style={styles.menuContent}>
                 <Text style={[styles.menuTitle, { color: colors.textPrimary }]}>Avisos de la Escuela</Text>
                 <Text style={[styles.notifDesc, { color: colors.textMuted }]}>Comunicados y anuncios</Text>
+              </View>
+              <Feather name="chevron-right" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
+            {/* Maestros de tu hijo (v1.1) */}
+            <TouchableOpacity
+              style={[styles.menuItem, { borderBottomColor: colors.border }]}
+              onPress={() => {
+                triggerHaptic();
+                router.push('/maestros');
+              }}
+            >
+              <View style={[styles.menuIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Feather name="users" size={20} color={colors.primary} />
+              </View>
+              <View style={styles.menuContent}>
+                <Text style={[styles.menuTitle, { color: colors.textPrimary }]}>Maestros de tu hijo</Text>
+                <Text style={[styles.notifDesc, { color: colors.textMuted }]}>Contacto directo con profesores del grupo</Text>
               </View>
               <Feather name="chevron-right" size={20} color={colors.textMuted} />
             </TouchableOpacity>
