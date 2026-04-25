@@ -18,6 +18,7 @@ import {
   Firestore
 } from 'firebase/firestore';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import Constants from 'expo-constants';
 import { FIREBASE_CONFIG, COLLECTIONS } from '../constants/Config';
 
 // ============ INICIALIZACIÓN ============
@@ -25,8 +26,14 @@ import { FIREBASE_CONFIG, COLLECTIONS } from '../constants/Config';
 let app: FirebaseApp;
 let db: Firestore;
 
-// Configuración directa de Firebase
-const firebaseConfig = {
+// Configuración Firebase — desde v1.3.0 lee de Constants.expoConfig.extra.firebase
+// definido en app.json. Esto permite swap por escuela vía EAS profiles o
+// variantes de build, sin tocar este archivo.
+//
+// Fallback al proyecto scanner-v3 (CBTis No. 001) por compat — si la app
+// se carga sin config, sigue funcionando con la escuela original.
+const extraFirebase = (Constants.expoConfig?.extra as any)?.firebase;
+const firebaseConfig = extraFirebase || {
   apiKey: "AIzaSyDD4DbbZzT6Mm1guTJUYE-HEtG4hq1qaP8",
   authDomain: "scanner-v3.firebaseapp.com",
   databaseURL: "https://scanner-v3-default-rtdb.firebaseio.com",
