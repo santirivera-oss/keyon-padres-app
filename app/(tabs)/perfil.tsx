@@ -700,6 +700,24 @@ export default function PerfilScreen() {
               <Feather name="chevron-right" size={20} color={colors.textMuted} />
             </TouchableOpacity>
 
+            {/* Reportes Mensuales (v1.2) */}
+            <TouchableOpacity
+              style={[styles.menuItem, { borderBottomColor: colors.border }]}
+              onPress={() => {
+                triggerHaptic();
+                router.push('/reportes-mensuales');
+              }}
+            >
+              <View style={[styles.menuIconContainer, { backgroundColor: colors.success + '20' }]}>
+                <Feather name="file-text" size={20} color={colors.success} />
+              </View>
+              <View style={styles.menuContent}>
+                <Text style={[styles.menuTitle, { color: colors.textPrimary }]}>Reportes Mensuales</Text>
+                <Text style={[styles.notifDesc, { color: colors.textMuted }]}>Resumen mensual con asistencia y calificaciones (PDF)</Text>
+              </View>
+              <Feather name="chevron-right" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
             {/* Ayuda y Soporte */}
             <TouchableOpacity 
               style={[styles.menuItem, { borderBottomColor: colors.border }]}
