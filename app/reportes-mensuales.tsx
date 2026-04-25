@@ -24,6 +24,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { router } from 'expo-router';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
 import { useStore } from '../store/useStore';
 import { useTheme } from '../context/ThemeContext';
 import reportesMensualesService, {
@@ -227,8 +229,8 @@ export default function ReportesMensualesScreen() {
           } catch (_) {}
         }, 500);
       } else {
-        const Print = await import('expo-print');
-        const Sharing = await import('expo-sharing');
+        // Import estático arriba del archivo. El dynamic import() falla en
+        // Expo SDK 52 con Hermes/Metro: "Requiring unknown module 4203".
         const result = await Print.printToFileAsync({ html, base64: false });
         if (!result?.uri) {
           Alert.alert('PDF', 'No se pudo generar el PDF.');
