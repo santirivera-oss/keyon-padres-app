@@ -168,6 +168,11 @@ export interface SesionPadre {
   // 🆕 Campo para identificar al padre (puede ser el mismo alumnoId o un ID único)
   padreId?: string;
   nombrePadre?: string;
+  // 🛡️ ARCO — el código de vinculación se persiste en la sesión para que
+  // las Cloud Functions arco* puedan validar que la solicitud viene del
+  // tutor real. NO es un secreto crítico (ya está en SecureStore como
+  // sesión completa) y permite ejercer derechos sin re-login.
+  codigo?: string;
 }
 
 export interface CredencialesLogin {

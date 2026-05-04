@@ -172,6 +172,9 @@ export async function login(credenciales: CredencialesLogin): Promise<ApiRespons
       alumnoId: alumno.id,
       alumno,
       expiracion: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 días
+      // ARCO: persistir el código (uppercase) para llamar a Cloud Functions
+      // arcoMisDatos / arcoSolicitarCorreccion / arcoRevocarConsentimiento.
+      codigo: codigo.toUpperCase(),
     };
     
     // Guardar sesión

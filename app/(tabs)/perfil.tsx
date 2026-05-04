@@ -682,6 +682,24 @@ export default function PerfilScreen() {
               <Feather name="chevron-right" size={20} color={colors.textMuted} />
             </TouchableOpacity>
 
+            {/* Mis derechos ARCO (LFPDPPP) */}
+            <TouchableOpacity
+              style={[styles.menuItem, { borderBottomColor: colors.border }]}
+              onPress={() => {
+                triggerHaptic();
+                router.push('/arco');
+              }}
+            >
+              <View style={[styles.menuIconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <Feather name="shield" size={20} color={colors.primary} />
+              </View>
+              <View style={styles.menuContent}>
+                <Text style={[styles.menuTitle, { color: colors.textPrimary }]}>Mis derechos (ARCO)</Text>
+                <Text style={[styles.notifDesc, { color: colors.textMuted }]}>Acceso · Rectificación · Cancelación · LFPDPPP</Text>
+              </View>
+              <Feather name="chevron-right" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+
             {/* Maestros de tu hijo (v1.1) */}
             <TouchableOpacity
               style={[styles.menuItem, { borderBottomColor: colors.border }]}
