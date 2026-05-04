@@ -15,7 +15,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import * as Clipboard from 'expo-clipboard';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { useTheme } from '../context/ThemeContext';
@@ -53,6 +52,9 @@ export default function ArcoScreen() {
   const [valorPropuesto, setValorPropuesto] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
+  // Form cancelación
+  const [motivoCancelacion, setMotivoCancelacion] = useState('');
+
   // ───── Acceso ─────
   const handleDescargar = async () => {
     setLoadingExport(true);
@@ -61,18 +63,11 @@ export default function ArcoScreen() {
       setExportResult(data);
       Alert.alert(
         '✓ Datos descargados',
-        `Archivo generado con ${data.asistencia.length} registros de asistencia, ${data.calificaciones.length} calificaciones, ${data.reportesDisciplina.length} reportes.\n\n¿Qué hacer con el archivo?`,
+        `Archivo generado con ${data.asistencia.length} registros de asistencia, ${data.calificaciones.length} calificaciones, ${data.reportesDisciplina.length} reportes.`,
         [
           {
-            text: 'Compartir JSON',
+            text: 'Compartir / guardar',
             onPress: () => compartirExport(data),
-          },
-          {
-            text: 'Copiar al portapapeles',
-            onPress: async () => {
-              await Clipboard.setStringAsync(JSON.stringify(data, null, 2));
-              Alert.alert('Copiado', 'Tus datos están en el portapapeles.');
-            },
           },
           { text: 'OK' },
         ]
@@ -131,35 +126,35 @@ export default function ArcoScreen() {
     );
   };
 
-  // ───── Cancelación ─────
+  // ───── Cancelación (modelo nuevo: solicitud que admin debe aprobar) ─────
   const handleRevocar = () => {
+    if (!motivoCancelacion || motivoCancelacion.trim().length < 10) {
+      Alert.alert(
+        'Motivo requerido',
+        'Por favor escribe el motivo de la revocación (mínimo 10 caracteres). El admin lo necesita para procesar tu solicitud.'
+      );
+      return;
+    }
     showConfirm(
-      '¿Revocar consentimiento biométrico?',
-      'Esta acción ELIMINA permanentemente el descriptor facial de tu hijo del sistema. ' +
-      'No podrá volver a usar reconocimiento facial en los kioscos. Sí podrá seguir usando QR / código de barras.\n\n' +
-      '¿Continuar?',
+      'Solicitar revocación de consentimiento',
+      'Tu solicitud quedará registrada. El admin la revisará y ejecutará la eliminación del descriptor biométrico en máximo 20 días hábiles (LFPDPPP Art. 32).\n\n' +
+      'El admin no puede negar la revocación, sólo verificar tu identidad.\n\n' +
+      'Motivo: "' + motivoCancelacion.trim() + '"\n\n' +
+      '¿Enviar solicitud?',
       async () => {
-        // Doble confirm para una acción destructiva
-        showConfirm(
-          'Última confirmación',
-          'Esta acción es IRREVERSIBLE. ¿Confirmas la revocación del consentimiento biométrico?',
-          async () => {
-            setLoadingRevoke(true);
-            try {
-              const r = await revocarConsentimiento('Revocación solicitada por tutor desde app');
-              Alert.alert(
-                '✓ Consentimiento revocado',
-                r.descriptorEliminado
-                  ? 'El descriptor biométrico fue eliminado del sistema. Queda registro auditado de la revocación.'
-                  : 'Consentimiento marcado como revocado, pero no se pudo confirmar la eliminación del descriptor. Contacta al admin.'
-              );
-            } catch (e: any) {
-              Alert.alert('Error', e?.message || 'No se pudo revocar');
-            } finally {
-              setLoadingRevoke(false);
-            }
-          }
-        );
+        setLoadingRevoke(true);
+        try {
+          const r = await revocarConsentimiento(motivoCancelacion.trim());
+          Alert.alert(
+            '✓ Solicitud enviada',
+            r.mensaje || 'Tu solicitud fue registrada. Recibirás confirmación cuando se procese.'
+          );
+          setMotivoCancelacion('');
+        } catch (e: any) {
+          Alert.alert('Error', e?.message || 'No se pudo enviar la solicitud');
+        } finally {
+          setLoadingRevoke(false);
+        }
       }
     );
   };
@@ -271,14 +266,26 @@ export default function ArcoScreen() {
           <View style={styles.cardHeader}>
             <Feather name="alert-octagon" size={20} color={colors.danger} />
             <Text style={[styles.cardTitle, { color: colors.danger }]}>
-              Revocar consentimiento biométrico
+              Solicitar revocación de consentimiento
             </Text>
           </View>
           <Text style={styles.cardDesc}>
-            Elimina permanentemente el rostro del alumno del sistema. El registro facial dejará
-            de funcionar en los kioscos. El alumno podrá seguir usando QR / código de barras.
-            Se borra el descriptor en el servidor y queda registro auditado de la revocación.
+            Solicita la eliminación permanente del descriptor facial. El admin recibirá tu
+            solicitud, verificará tu identidad y ejecutará la eliminación en máximo 20 días
+            hábiles (LFPDPPP Art. 32). El admin no puede negar la revocación, sólo verificar.
+            Después de la ejecución, el alumno podrá seguir usando QR / código de barras.
           </Text>
+          <Text style={styles.label}>Motivo de la revocación (obligatorio)</Text>
+          <TextInput
+            style={[styles.input, styles.textarea]}
+            value={motivoCancelacion}
+            onChangeText={setMotivoCancelacion}
+            placeholder="Explica brevemente por qué solicitas la revocación (mínimo 10 caracteres)"
+            placeholderTextColor={colors.textMuted}
+            multiline
+            numberOfLines={3}
+            maxLength={1000}
+          />
           <TouchableOpacity
             style={[styles.btn, styles.btnDanger]}
             onPress={handleRevocar}
@@ -286,7 +293,7 @@ export default function ArcoScreen() {
           >
             {loadingRevoke
               ? <ActivityIndicator color="#fff" />
-              : <Text style={styles.btnTextLight}>Revocar consentimiento</Text>}
+              : <Text style={styles.btnTextLight}>Enviar solicitud de revocación</Text>}
           </TouchableOpacity>
         </View>
 

@@ -111,16 +111,23 @@ export async function solicitarCorreccion(input: SolicitudCorreccion): Promise<{
 // ART. 18 / 20 — CANCELACIÓN (revocar consentimiento biométrico)
 // =====================================================================
 
-export async function revocarConsentimiento(motivo?: string): Promise<{
+export interface RevocarConsentResponse {
   success: boolean;
-  descriptorEliminado: boolean;
+  solicitudId?: string;
+  // Compat con versión anterior (instantánea, ya removida)
+  descriptorEliminado?: boolean;
   mensaje: string;
-}> {
+}
+
+export async function revocarConsentimiento(motivo: string): Promise<RevocarConsentResponse> {
+  if (!motivo || motivo.trim().length < 10) {
+    throw new Error('El motivo es obligatorio (mínimo 10 caracteres).');
+  }
   const { alumnoControl, codigo } = await obtenerCredencialesARCO();
-  const fn = httpsCallable<any, { success: boolean; descriptorEliminado: boolean; mensaje: string }>(
+  const fn = httpsCallable<any, RevocarConsentResponse>(
     getFunctionsClient(),
     'arcoRevocarConsentimiento'
   );
-  const result = await fn({ alumnoControl, codigo, motivo: motivo || '' });
+  const result = await fn({ alumnoControl, codigo, motivo });
   return result.data;
 }

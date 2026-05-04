@@ -29,7 +29,7 @@ import Card from '../../components/ui/Card';
 import HijosSelector from '../../components/HijosSelector';
 import biometricService, { BiometricType } from '../../services/biometric';
 import { resetTutorial } from '../../components/TutorialOverlay';
-import { verificarConsentimiento, revocarConsentimiento } from '../../services/consentimiento';
+import { verificarConsentimiento } from '../../services/consentimiento';
 import pdfService from '../../services/pdfExport';
 import attendanceService from '../../services/attendance';
 import justificantesService, { Justificante, MotivoJustificante } from '../../services/justificantes';
@@ -234,49 +234,8 @@ export default function PerfilScreen() {
     }
   };
 
-  // Revocar consentimiento biométrico
-  const handleRevocarConsentimiento = () => {
-    if (!alumnoMostrar?.control) {
-      showAlert('Error', 'No se encontró información del alumno');
-      return;
-    }
-
-    Alert.alert(
-      '⚠️ Revocar Consentimiento',
-      '¿Está seguro de revocar el consentimiento biométrico?\n\n• El alumno ya no podrá usar reconocimiento facial\n• Los datos biométricos serán eliminados permanentemente\n• Esta acción no se puede deshacer',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Sí, Revocar',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              triggerHaptic();
-              const result = await revocarConsentimiento(
-                alumnoMostrar.control,
-                'Revocado por padre/tutor desde la app'
-              );
-              
-              if (result.success) {
-                setTieneConsentimiento(false);
-                if (Platform.OS !== 'web') {
-                  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-                }
-                Alert.alert(
-                  '✅ Consentimiento Revocado',
-                  'Los datos biométricos han sido eliminados permanentemente.'
-                );
-              } else {
-                showAlert('Error', result.error || 'No se pudo revocar el consentimiento');
-              }
-            } catch (error: any) {
-              showAlert('Error', error.message || 'Error al revocar');
-            }
-          }
-        }
-      ]
-    );
-  };
+  // handleRevocarConsentimiento eliminado — la revocación vive en /arco
+  // como solicitud que requiere motivo y aprobación del admin (LFPDPPP).
 
   // Toggle biometría
   const toggleBiometric = async (value: boolean) => {
@@ -828,30 +787,7 @@ export default function PerfilScreen() {
               )}
             </TouchableOpacity>
 
-            {/* Botón Revocar - Solo si tiene consentimiento */}
-            {tieneConsentimiento === true && (
-              <TouchableOpacity 
-                style={[styles.menuItem, { 
-                  borderBottomColor: 'transparent',
-                  backgroundColor: 'rgba(239,68,68,0.1)',
-                  marginTop: -1
-                }]}
-                onPress={handleRevocarConsentimiento}
-              >
-                <View style={[styles.menuIconContainer, { backgroundColor: 'rgba(239,68,68,0.2)' }]}>
-                  <Feather name="x-circle" size={20} color="#ef4444" />
-                </View>
-                <View style={styles.menuContent}>
-                  <Text style={[styles.menuTitle, { color: '#ef4444' }]}>
-                    Revocar Consentimiento
-                  </Text>
-                  <Text style={[styles.notifDesc, { color: '#94a3b8' }]}>
-                    Eliminar datos biométricos
-                  </Text>
-                </View>
-                <Feather name="chevron-right" size={20} color="#ef4444" />
-              </TouchableOpacity>
-            )}
+            {/* Revocación movida a /arco — flujo único con motivo + aprobación admin */}
           </Card>
         </AnimatedView>
 
